@@ -14,12 +14,14 @@ import io.reactivex.Observable;
 
 public class RemoteControlServiceImpl implements RemoteControlService {
     private static final int PORT = 4543;
-    private final Client client;
+    private final ClientParser parser;
+    private Client client;
     private final Server server;
 
     public RemoteControlServiceImpl(ClientParser parser) {
-        this.client = new Client(PORT, parser);
+
         this.server = new Server(PORT, parser);
+        this.parser = parser;
     }
 
 
@@ -29,8 +31,9 @@ public class RemoteControlServiceImpl implements RemoteControlService {
     }
 
     @Override
-    public void publish(RemoteControlModel model, String host) {
-        client.sendMessage(model, host);
+    public Observable<Boolean> publish(String host) {
+        this.client = new Client(PORT, parser);
+        return client.connect(host);
     }
 
     @Override
@@ -70,5 +73,10 @@ public class RemoteControlServiceImpl implements RemoteControlService {
     @Override
     public void unPublish() {
         client.close();
+    }
+
+    @Override
+    public void sendMessage() {
+        client.sendMessage(new RemoteControlModel());
     }
 }

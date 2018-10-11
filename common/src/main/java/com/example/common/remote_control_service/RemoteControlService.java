@@ -8,11 +8,13 @@ public interface RemoteControlService {
 
     Observable<RemoteControlModel> subscribe();
 
-    void publish(RemoteControlModel model, String host);
+    Observable<Boolean> publish(String host);
 
     String getIpAddress();
 
     void unSubscribe();
 
     void unPublish();
+
+    void sendMessage();
 }

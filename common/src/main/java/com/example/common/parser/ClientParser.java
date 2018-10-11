@@ -12,13 +12,13 @@ public class ClientParser {
     }
 
     public RemoteControlModel parse(String string) {
-        switch (Integer.valueOf(string)) {
+/*        switch (Integer.valueOf(string)) {
             //todo
-        }
+        }*/
         return remoteControlModel;
     }
 
     public String parseFromModel(RemoteControlModel model) {
-        return "";//todo
+        return "5";//todo
     }
 }

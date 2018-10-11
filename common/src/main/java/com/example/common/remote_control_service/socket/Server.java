@@ -6,7 +6,6 @@ import com.example.common.models.RemoteControlModel;
 import com.example.common.parser.ClientParser;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Scanner;
@@ -62,18 +61,21 @@ public class Server extends Thread {
 
     private void work() {
         String request;
-        while (clientSocket.isConnected()) {
-            try (PrintWriter printWriter = new PrintWriter(clientSocket.getOutputStream(), true);
-                 Scanner scanner = new Scanner(clientSocket.getInputStream())) {
-                request = scanner.nextLine();
-                Log.d(TAG, "request " + request);
-                subject.onNext(clientParser.parse(request));
 
+        try (Scanner scanner = new Scanner(clientSocket.getInputStream())) {
+            while (clientSocket.isConnected()) {
+                if (scanner.hasNext()) {
+                    request = scanner.nextLine();
+                    Log.d(TAG, "request " + request);
+                    subject.onNext(clientParser.parse(request));
+                }
+
+            }
             } catch (IOException e) {
-                subject.onError(e);
+            //subject.onError(e);
                 e.printStackTrace();
             }
-        }
+
     }
 
     public void close() {

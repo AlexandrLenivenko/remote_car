@@ -3,6 +3,8 @@ package com.example.aslen.remotecar.main_screen;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.aslen.remotecar.App;
 import com.example.aslen.remotecar.R;
@@ -18,12 +20,15 @@ public class CarActivity extends Activity implements CarView {
     @Inject
     protected CarPresenter presenter;
     private Gpio ledGpio;
+    private TextView messageTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ((App) getApplication()).getAppComponent().inject(this);
+
+        messageTextView = findViewById(R.id.tv_message);
 
         try {
             String pinName = "BCM17";
@@ -73,6 +78,16 @@ public class CarActivity extends Activity implements CarView {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void onError(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void showIp(String ipAddress) {
+        messageTextView.setText(ipAddress);
     }
 
     public void close(View view) {
