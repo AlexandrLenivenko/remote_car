@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.aslen.remotecar.App;
 import com.example.aslen.remotecar.R;
@@ -82,7 +81,7 @@ public class CarActivity extends Activity implements CarView {
 
     @Override
     public void onError(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+        messageTextView.setText(message);
     }
 
     @Override

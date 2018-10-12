@@ -75,10 +75,10 @@
 
     <EditText
         android:id="@+id/edt_server_ip"
-        android:layout_width="wrap_content"
+        android:layout_width="219dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginStart="72dp"
+        android:layout_marginBottom="8dp"
         android:ems="10"
         android:hint="@string/enter_server_ip"
         android:imeOptions="flagNoExtractUi"
@@ -86,21 +86,39 @@
         android:text="@string/_192_168_1_100"
         android:textColor="@android:color/white"
         android:textColorHint="@android:color/white"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/img_stop"
-        app:layout_constraintTop_toBottomOf="@+id/img_stop" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_message"
+        app:layout_constraintVertical_bias="0.497" />
 
     <Button
         android:id="@+id/btn_connect"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:text="@string/connect"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/img_stop"
-        app:layout_constraintStart_toStartOf="@+id/img_stop"
-        app:layout_constraintTop_toBottomOf="@+id/edt_server_ip" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.853"
+        app:layout_constraintStart_toEndOf="@+id/edt_server_ip"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.589" />
 
+    <android.support.constraint.Group
+        android:id="@+id/group_play"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:constraint_referenced_ids="img_up, img_down, img_left, img_right, img_stop"
+        tools:visibility="visible" />
+
+    <android.support.constraint.Group
+        android:id="@+id/group_connect"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="edt_server_ip, btn_connect "
+        tools:visibility="gone" />
 </android.support.constraint.ConstraintLayout>

@@ -7,8 +7,6 @@ import com.example.common.parser.ClientParser;
 
 import java.io.IOException;
 import java.net.ServerSocket;
-import java.net.Socket;
-import java.util.Scanner;
 
 import io.reactivex.Observable;
 import io.reactivex.subjects.BehaviorSubject;
@@ -20,7 +18,6 @@ public class Server extends Thread {
     private final BehaviorSubject<RemoteControlModel> subject;
     private final ClientParser clientParser;
     private ServerSocket serverSocket;
-    private Socket clientSocket;
 
     public Server(int port, ClientParser clientParser) {
         this.port = port;
@@ -32,54 +29,46 @@ public class Server extends Thread {
     public void run() {
         try {
             serverSocket = new ServerSocket(port);
+            acceptNewClient();
         } catch (IOException e) {
             e.printStackTrace();
             subject.onError(e);
+        } finally {
+            if (serverSocket != null) {
+                try {
+                    serverSocket.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
-        acceptNewClient();
         super.run();
     }
 
     private void acceptNewClient() {
-        while (!interrupted()) {
+        ConnectionWorker connectionWorker;
+        while (!isInterrupted()) {
             try {
-                clientSocket = serverSocket.accept();
                 Log.d(TAG, "Connected new device");
-                work();
+                connectionWorker = new ConnectionWorker(serverSocket.accept(), subject, clientParser);
+                new Thread(connectionWorker).start();
 
             } catch (IOException e) {
                 subject.onError(e);
                 e.printStackTrace();
             }
         }
-        try {
-            clientSocket.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void work() {
-        String request;
-
-        try (Scanner scanner = new Scanner(clientSocket.getInputStream())) {
-            while (clientSocket.isConnected()) {
-                if (scanner.hasNext()) {
-                    request = scanner.nextLine();
-                    Log.d(TAG, "request " + request);
-                    subject.onNext(clientParser.parse(request));
-                }
-
-            }
-            } catch (IOException e) {
-            //subject.onError(e);
-                e.printStackTrace();
-            }
-
     }
 
     public void close() {
         interrupt();
+        try {
+            serverSocket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            subject.onError(e);
+        }
+
     }
 
     public Observable<RemoteControlModel> subscribe() {

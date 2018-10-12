@@ -30,30 +30,22 @@ public class Client extends Thread {
     public void run() {
         try {
             client = new Socket(host, port);
-            if (client != null) {
-                subject.onNext(true);
-            }
+            subject.onNext(true);
         } catch (IOException e) {
             subject.onError(e);
             e.printStackTrace();
             interrupt();
         }
+
         send();
-/*        try {
-            if (client != null)
-                client.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-            subject.onError(e);
-        }*/
+
         super.run();
     }
 
     private void send() {
         while (!interrupted()) {
-
                 try (PrintWriter printWriter = new PrintWriter(client.getOutputStream(), true)) {
-                    while (client.isConnected()) {
+                    while (client != null && client.isConnected()) {
                         if (hasNewMessage) {
                             printWriter.println(message);
                             printWriter.flush();
@@ -67,19 +59,17 @@ public class Client extends Thread {
                 } catch (IOException e) {
                     e.printStackTrace();
                     subject.onError(e);
-                    interrupt();
+                    //interrupt();
                 }
-            }
+        }
 
     }
 
     public void close() {
-        try {
-            client.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        message = "exit";
+        hasNewMessage = true;
         interrupt();
+        closeConnection();
     }
 
     public void sendMessage(RemoteControlModel model) {
@@ -87,11 +77,33 @@ public class Client extends Thread {
         hasNewMessage = true;
     }
 
+
     public Observable<Boolean> connect(String host) {
+        closeConnection();
         this.host = host;
-        if (client == null) {
-            start();
-        }
+        start();
         return subject;
+    }
+
+    private void closeConnection() {
+        if (client != null && !client.isClosed()) {
+            try {
+                if (client != null)
+                    client.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+                subject.onError(e);
+            } finally {
+                client = null;
+            }
+        }
+
+        client = null;
+    }
+
+    @Override
+    protected void finalize() throws Throwable {
+        super.finalize();
+        closeConnection();
     }
 }

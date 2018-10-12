@@ -76,7 +76,7 @@ public class RemoteControlServiceImpl implements RemoteControlService {
     }
 
     @Override
-    public void sendMessage() {
-        client.sendMessage(new RemoteControlModel());
+    public void sendMessage(RemoteControlModel remoteControlModel) {
+        client.sendMessage(remoteControlModel);
     }
 }

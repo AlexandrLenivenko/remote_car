@@ -10,4 +10,7 @@ public interface MainView {
     void hideProgress();
 
     void showDialog();
+
+    void showConnectViews();
+
 }

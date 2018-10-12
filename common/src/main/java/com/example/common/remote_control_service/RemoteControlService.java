@@ -16,5 +16,5 @@ public interface RemoteControlService {
 
     void unPublish();
 
-    void sendMessage();
+    void sendMessage(RemoteControlModel remoteControlModel);
 }
