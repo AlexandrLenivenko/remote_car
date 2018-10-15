@@ -1,6 +1,13 @@
 package com.example.common.presenter;
 
+import io.reactivex.disposables.CompositeDisposable;
+
 public abstract class BasePresenter<V> {
+    protected final CompositeDisposable compositeDisposable;
+
+    public BasePresenter() {
+        compositeDisposable = new CompositeDisposable();
+    }
 
     private V view;
 
@@ -27,7 +34,7 @@ public abstract class BasePresenter<V> {
     }
 
     public void onDestroy() {
-
+        compositeDisposable.dispose();
     }
 
     public interface Command<V> {

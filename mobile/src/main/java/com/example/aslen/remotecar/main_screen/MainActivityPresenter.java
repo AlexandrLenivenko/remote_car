@@ -7,18 +7,13 @@ import com.example.common.presenter.BasePresenter;
 import com.example.common.remote_control_service.RemoteControlService;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
 
 public class MainActivityPresenter extends BasePresenter<MainView> {
 
     private final RemoteControlService remoteControlService;
-    private final CompositeDisposable compositeDisposable;
-    private final RemoteControlModel remoteControlModel;
 
     public MainActivityPresenter(RemoteControlService remoteControlService) {
         this.remoteControlService = remoteControlService;
-        compositeDisposable = new CompositeDisposable();
-        remoteControlModel = new RemoteControlModel();
     }
 
     @Override
@@ -31,8 +26,8 @@ public class MainActivityPresenter extends BasePresenter<MainView> {
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
         remoteControlService.unPublish();
+        super.onDestroy();
     }
 
     @Override
@@ -41,34 +36,40 @@ public class MainActivityPresenter extends BasePresenter<MainView> {
         remoteControlService.unPublish();
     }
 
-    public void onStopMoving() {
+    void onStopMoving() {
+        RemoteControlModel remoteControlModel = new RemoteControlModel();
         remoteControlModel.setStop();
         remoteControlService.sendMessage(remoteControlModel);
     }
 
-    public void onUp() {
+    void onUp() {
+        RemoteControlModel remoteControlModel = new RemoteControlModel();
         remoteControlModel.setUp();
         remoteControlService.sendMessage(remoteControlModel);
     }
 
-    public void onDown() {
+    void onDown() {
+        RemoteControlModel remoteControlModel = new RemoteControlModel();
         remoteControlModel.setDown();
         remoteControlService.sendMessage(remoteControlModel);
     }
 
-    public void onLeft() {
+    void onLeft() {
+        RemoteControlModel remoteControlModel = new RemoteControlModel();
         remoteControlModel.setLeft();
         remoteControlService.sendMessage(remoteControlModel);
     }
 
-    public void onRight() {
+    void onRight() {
+        RemoteControlModel remoteControlModel = new RemoteControlModel();
         remoteControlModel.setRight();
         remoteControlService.sendMessage(remoteControlModel);
     }
 
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     @SuppressLint("CheckResult")
-    public void onConnect(String host) {
-        runOnView(view -> view.showDialog());
+    void onConnect(String host) {
+        runOnView(MainView::showDialog);
         remoteControlService.publish(host)
                 .doOnSubscribe(compositeDisposable::add)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -77,7 +78,7 @@ public class MainActivityPresenter extends BasePresenter<MainView> {
                         throwable -> runOnView(view -> view.error(throwable)));
     }
 
-    public void onDisconnectClicked() {
+    void onDisconnectClicked() {
         remoteControlService.unPublish();
         runOnView(view -> {
             view.showIpAddress(remoteControlService.getIpAddress());

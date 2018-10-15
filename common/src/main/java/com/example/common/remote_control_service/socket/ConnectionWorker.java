@@ -3,7 +3,7 @@ package com.example.common.remote_control_service.socket;
 import android.util.Log;
 
 import com.example.common.models.RemoteControlModel;
-import com.example.common.parser.ClientParser;
+import com.example.common.parser.BaseParser;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,10 +16,10 @@ public class ConnectionWorker implements Runnable {
 
     private final Socket socket;
     private final BehaviorSubject<RemoteControlModel> subject;
-    private final ClientParser clientParser;
+    private final BaseParser<String, RemoteControlModel> clientParser;
     private InputStream inputStream;
 
-    public ConnectionWorker(Socket socket, BehaviorSubject<RemoteControlModel> subject, ClientParser clientParser) {
+    public ConnectionWorker(Socket socket, BehaviorSubject<RemoteControlModel> subject, BaseParser<String, RemoteControlModel> clientParser) {
         this.socket = socket;
         this.subject = subject;
         this.clientParser = clientParser;

@@ -1,7 +1,8 @@
 package com.example.common.remote_control_service;
 
+import com.example.common.BuildConfig;
 import com.example.common.models.RemoteControlModel;
-import com.example.common.parser.ClientParser;
+import com.example.common.parser.BaseParser;
 import com.example.common.remote_control_service.socket.Client;
 import com.example.common.remote_control_service.socket.Server;
 
@@ -13,14 +14,12 @@ import java.util.Enumeration;
 import io.reactivex.Observable;
 
 public class RemoteControlServiceImpl implements RemoteControlService {
-    private static final int PORT = 4543;
-    private final ClientParser parser;
+    private final BaseParser<String, RemoteControlModel> parser;
     private Client client;
     private final Server server;
 
-    public RemoteControlServiceImpl(ClientParser parser) {
-
-        this.server = new Server(PORT, parser);
+    public RemoteControlServiceImpl(BaseParser<String, RemoteControlModel> parser, Server server) {
+        this.server = server;
         this.parser = parser;
     }
 
@@ -32,7 +31,7 @@ public class RemoteControlServiceImpl implements RemoteControlService {
 
     @Override
     public Observable<Boolean> publish(String host) {
-        this.client = new Client(PORT, parser);
+        client = new Client(BuildConfig.SERVER_CLIENT_PORT, parser);
         return client.connect(host);
     }
 
@@ -58,7 +57,6 @@ public class RemoteControlServiceImpl implements RemoteControlService {
             }
 
         } catch (SocketException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
             ip.append("Something Wrong! ").append(e.toString()).append("\n");
         }

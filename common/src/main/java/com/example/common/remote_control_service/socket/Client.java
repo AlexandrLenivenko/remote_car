@@ -1,7 +1,7 @@
 package com.example.common.remote_control_service.socket;
 
 import com.example.common.models.RemoteControlModel;
-import com.example.common.parser.ClientParser;
+import com.example.common.parser.BaseParser;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -13,14 +13,14 @@ import io.reactivex.subjects.BehaviorSubject;
 public class Client extends Thread {
 
     private final int port;
-    private final ClientParser parser;
-    private final BehaviorSubject<Boolean> subject;
+    private final BaseParser<String, RemoteControlModel> parser;
+    private BehaviorSubject<Boolean> subject;
     private Socket client;
     private String message;
     private boolean hasNewMessage;
     private String host;
 
-    public Client(int port, ClientParser parser) {
+    public Client(int port, BaseParser<String, RemoteControlModel> parser) {
         this.port = port;
         this.parser = parser;
         subject = BehaviorSubject.create();
@@ -43,31 +43,25 @@ public class Client extends Thread {
     }
 
     private void send() {
-        while (!interrupted()) {
-                try (PrintWriter printWriter = new PrintWriter(client.getOutputStream(), true)) {
-                    while (client != null && client.isConnected()) {
-                        if (hasNewMessage) {
-                            printWriter.println(message);
-                            printWriter.flush();
-                            hasNewMessage = false;
-                        }
-                        if (isInterrupted()) {
-                            break;
-                        }
-
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    subject.onError(e);
-                    //interrupt();
+        try (PrintWriter printWriter = new PrintWriter(client.getOutputStream(), true)) {
+            while (client != null && client.isConnected()) {
+                if (hasNewMessage) {
+                    printWriter.println(message);
+                    printWriter.flush();
+                    hasNewMessage = false;
                 }
-        }
+                if (isInterrupted()) {
+                    break;
+                }
 
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            subject.onError(e);
+        }
     }
 
     public void close() {
-        message = "exit";
-        hasNewMessage = true;
         interrupt();
         closeConnection();
     }
@@ -95,10 +89,9 @@ public class Client extends Thread {
                 subject.onError(e);
             } finally {
                 client = null;
+                subject = null;
             }
         }
-
-        client = null;
     }
 
     @Override

@@ -4,21 +4,19 @@ import com.example.common.models.RemoteControlModel;
 import com.google.gson.Gson;
 
 
-public class ClientParser {
-    private static final String TAG = "ClientParser";
-
-    private final RemoteControlModel remoteControlModel;
+public class ClientServerParser implements BaseParser<String, RemoteControlModel> {
     private final Gson gson;
 
-    public ClientParser() {
-        remoteControlModel = new RemoteControlModel();
-        gson = new Gson();
+    public ClientServerParser(Gson gson) {
+        this.gson = gson;
     }
 
+    @Override
     public RemoteControlModel parse(String string) {
         return gson.fromJson(string, RemoteControlModel.class);
     }
 
+    @Override
     public String parseFromModel(RemoteControlModel model) {
         return gson.toJson(model);
     }

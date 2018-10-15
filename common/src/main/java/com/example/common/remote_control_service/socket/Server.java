@@ -3,7 +3,7 @@ package com.example.common.remote_control_service.socket;
 import android.util.Log;
 
 import com.example.common.models.RemoteControlModel;
-import com.example.common.parser.ClientParser;
+import com.example.common.parser.BaseParser;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -16,10 +16,10 @@ public class Server extends Thread {
 
     private final int port;
     private final BehaviorSubject<RemoteControlModel> subject;
-    private final ClientParser clientParser;
+    private final BaseParser<String, RemoteControlModel> clientParser;
     private ServerSocket serverSocket;
 
-    public Server(int port, ClientParser clientParser) {
+    public Server(int port, BaseParser<String, RemoteControlModel> clientParser) {
         this.port = port;
         subject = BehaviorSubject.create();
         this.clientParser = clientParser;
