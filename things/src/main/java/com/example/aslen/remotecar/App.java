@@ -5,6 +5,7 @@ import android.app.Application;
 import com.example.aslen.remotecar.di.AppComponent;
 import com.example.aslen.remotecar.di.DaggerAppComponent;
 
+
 public class App extends Application {
     private AppComponent appComponent;
 

@@ -2,6 +2,7 @@ package com.example.aslen.remotecar.main_screen;
 
 import android.annotation.SuppressLint;
 
+import com.example.aslen.remotecar.steppermotor.Direction;
 import com.example.common.models.RemoteControlModel;
 import com.example.common.presenter.BasePresenter;
 import com.example.common.remote_control_service.RemoteControlService;
@@ -56,18 +57,20 @@ public class CarPresenter extends BasePresenter<CarView> {
             return;
         }
         if (model.isLeft()) {
+            runOnView(view -> view.rotate(30, Direction.CLOCKWISE));
             blink(Arrays.asList(true, false, true, false, true, false));
             return;
         }
 
         if (model.isRight()) {
+            runOnView(view -> view.rotate(30, Direction.COUNTERCLOCKWISE));
             blink(Arrays.asList(true, false, true, false, true, false, true, false));
         }
     }
 
     @SuppressLint("CheckResult")
     private void blink(List<Boolean> first) {
-        io.reactivex.Observable.fromIterable(first).delay(450, TimeUnit.MILLISECONDS, Schedulers.trampoline())
+        io.reactivex.Observable.fromIterable(first).delay(50, TimeUnit.MILLISECONDS, Schedulers.trampoline())
                 .doOnSubscribe(compositeDisposable::add)
                 .subscribe(aBoolean -> runOnView(view -> view.turnOnOff(aBoolean)));
     }
