@@ -1,1 +1,1 @@
-include ':mobile', ':things', ':common'
+include ':mobile', ':things', ':common', ':step_motor_driver'

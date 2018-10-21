@@ -1,6 +1,4 @@
 apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion 28
@@ -27,9 +25,8 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     compileOnly 'com.google.android.things:androidthings:1.0'
-    kapt 'com.google.dagger:dagger-android-processor:2.13'
-    kapt 'com.google.dagger:dagger-compiler:2.16'
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    kapt "org.jetbrains.kotlin:kotlin-compiler-embeddable:1.2.71"
+    annotationProcessor 'com.google.dagger:dagger-android-processor:2.13'
+    annotationProcessor 'com.google.dagger:dagger-compiler:2.16'
     implementation project(':common')
+    implementation project(':step_motor_driver')
 }

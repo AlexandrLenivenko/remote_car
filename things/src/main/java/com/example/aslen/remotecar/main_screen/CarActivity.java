@@ -8,9 +8,9 @@ import android.widget.TextView;
 
 import com.example.aslen.remotecar.App;
 import com.example.aslen.remotecar.R;
-import com.example.aslen.remotecar.steppermotor.Direction;
 import com.example.aslen.remotecar.steppermotor.driver.uln2003.driver.ULN2003Resolution;
 import com.example.aslen.remotecar.steppermotor.driver.uln2003.motor.ULN2003StepperMotor;
+import com.example.step_motor.steppermotor.Direction;
 import com.google.android.things.pio.Gpio;
 import com.google.android.things.pio.PeripheralManager;
 

@@ -2,10 +2,10 @@ package com.example.aslen.remotecar.main_screen;
 
 import android.annotation.SuppressLint;
 
-import com.example.aslen.remotecar.steppermotor.Direction;
 import com.example.common.models.RemoteControlModel;
 import com.example.common.presenter.BasePresenter;
 import com.example.common.remote_control_service.RemoteControlService;
+import com.example.step_motor.steppermotor.Direction;
 
 import java.util.Arrays;
 import java.util.List;
