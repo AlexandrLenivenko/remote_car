@@ -18,6 +18,8 @@ class ULN2003StepperMotor(in1GpioId: String,
         stepperMotorDriver.open()
     }
 
+    fun stop() {uln2003.stop()}
+
     private fun getResolution(resolutionId: Int) = ULN2003Resolution.getFromId(resolutionId)
 
     override fun getStepsFromDegrees(degrees: Double, resolutionId: Int) = (degrees / CIRCLE_DEGREES.toDouble() * getStepsPerRevolution(resolutionId).toDouble()).toInt()

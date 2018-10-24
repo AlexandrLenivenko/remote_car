@@ -14,6 +14,9 @@ class ULN2003 internal constructor(private val in1GpioId: String,
                                    private val in4GpioId: String,
                                    private val gpioFactory: GpioFactory,
                                    private val awaiter: Awaiter) : StepperMotorDriver() {
+    override fun stop() {
+        setActiveCoils(false, false, false, false)
+    }
 
     constructor(in1GpioId: String, in2GpioId: String, in3GpioId: String, in4GpioId: String) :
             this(in1GpioId, in2GpioId, in3GpioId, in4GpioId, GpioFactory(), DefaultAwaiter())

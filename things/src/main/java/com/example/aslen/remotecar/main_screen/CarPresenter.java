@@ -2,12 +2,16 @@ package com.example.aslen.remotecar.main_screen;
 
 import android.annotation.SuppressLint;
 
+import com.example.aslen.remotecar.car_controller.blink.BlinkHendler;
+import com.example.aslen.remotecar.car_controller.CarPeripheralManager;
+import com.example.aslen.remotecar.car_controller.step_motor.StepMotorHandler;
+import com.example.aslen.remotecar.car_controller.stop.StopHandler;
+import com.example.aslen.remotecar.steppermotor.driver.uln2003.motor.ULN2003StepperMotor;
 import com.example.common.models.RemoteControlModel;
 import com.example.common.presenter.BasePresenter;
 import com.example.common.remote_control_service.RemoteControlService;
-import com.example.step_motor.steppermotor.Direction;
+import com.example.mylibrary.steppermotor.BlinckingDriver;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -17,10 +21,19 @@ import io.reactivex.schedulers.Schedulers;
 public class CarPresenter extends BasePresenter<CarView> {
 
     private final RemoteControlService service;
+    private final StepMotorHandler stepMotorHandler;
+    private final CarPeripheralManager carPeripheralManager;
 
 
     public CarPresenter(RemoteControlService service) {
         this.service = service;
+
+        carPeripheralManager = new CarPeripheralManager(new ULN2003StepperMotor("BCM4", "BCM17", "BCM27", "BCM22"), new BlinckingDriver("BCM2"));
+
+        stepMotorHandler = new StepMotorHandler(carPeripheralManager);
+        BlinkHendler blinkHendler = new BlinkHendler(carPeripheralManager);
+        stepMotorHandler.setNextHandler(blinkHendler);
+        blinkHendler.setNextHandler(new StopHandler(carPeripheralManager));
     }
 
     @SuppressLint("CheckResult")
@@ -44,7 +57,8 @@ public class CarPresenter extends BasePresenter<CarView> {
      *              right- 4
      */
     private void show(RemoteControlModel model) {
-        runOnView(view -> view.turnOnOff(model.isStop()));
+        stepMotorHandler.handle(model);
+       /* runOnView(view -> view.turnOnOff(model.isStop()));
 
         if (model.isUp()) {
             blink(Arrays.asList(true, false));
@@ -55,17 +69,8 @@ public class CarPresenter extends BasePresenter<CarView> {
         if (model.isDown()) {
             blink(Arrays.asList(true, false, true, false));
             return;
-        }
-        if (model.isLeft()) {
-            runOnView(view -> view.rotate(30, Direction.CLOCKWISE));
-            blink(Arrays.asList(true, false, true, false, true, false));
-            return;
-        }
+        }*/
 
-        if (model.isRight()) {
-            runOnView(view -> view.rotate(30, Direction.COUNTERCLOCKWISE));
-            blink(Arrays.asList(true, false, true, false, true, false, true, false));
-        }
     }
 
     @SuppressLint("CheckResult")

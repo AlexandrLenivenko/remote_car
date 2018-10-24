@@ -9,4 +9,6 @@ abstract class StepperMotorDriver : AutoCloseable {
     abstract fun open()
 
     abstract fun performStep(stepDuration: StepDuration)
+
+    abstract fun stop()
 }

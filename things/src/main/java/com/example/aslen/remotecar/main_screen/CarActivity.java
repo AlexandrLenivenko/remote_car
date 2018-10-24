@@ -10,8 +10,8 @@ import com.example.aslen.remotecar.App;
 import com.example.aslen.remotecar.R;
 import com.example.aslen.remotecar.steppermotor.driver.uln2003.driver.ULN2003Resolution;
 import com.example.aslen.remotecar.steppermotor.driver.uln2003.motor.ULN2003StepperMotor;
+import com.example.mylibrary.steppermotor.BlinckingDriver;
 import com.example.step_motor.steppermotor.Direction;
-import com.google.android.things.pio.Gpio;
 import com.google.android.things.pio.PeripheralManager;
 
 import java.io.IOException;
@@ -24,10 +24,10 @@ public class CarActivity extends Activity implements CarView {
 
     @Inject
     protected CarPresenter presenter;
-    private Gpio ledGpio;
     private TextView messageTextView;
     private ULN2003StepperMotor uln2003StepperMotor;
     private boolean isClockWise;
+    private BlinckingDriver blinckingDriver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,18 +39,9 @@ public class CarActivity extends Activity implements CarView {
 
         showPins();
 
-        try {
-            String pinName = "BCM2";
-            //new MotorHat()
-            ledGpio = PeripheralManager.getInstance().openGpio(pinName);
-            ledGpio.setDirection(Gpio.DIRECTION_OUT_INITIALLY_LOW);
-            uln2003StepperMotor = new ULN2003StepperMotor("BCM4", "BCM17", "BCM27", "BCM22");
-
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            //Log.e(TAG, "Error on PeripheralIO API", e);
-        }
+        //uln2003StepperMotor = new ULN2003StepperMotor("BCM4", "BCM17", "BCM27", "BCM22");
+        String pinName = "BCM2";
+       // blinckingDriver = new BlinckingDriver(pinName);
 
         findViewById(R.id.btn_rotate).setOnClickListener(view -> {
             isClockWise = !isClockWise;
@@ -93,22 +84,13 @@ public class CarActivity extends Activity implements CarView {
     @Override
     protected void onDestroy() {
         presenter.onDestroy();
-        try {
-            ledGpio.setValue(false);
-            ledGpio.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        blinckingDriver.close();
         super.onDestroy();
     }
 
     @Override
     public void turnOnOff(boolean isOn) {
-        try {
-            ledGpio.setValue(isOn);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        blinckingDriver.setState(isOn);
     }
 
     @Override
