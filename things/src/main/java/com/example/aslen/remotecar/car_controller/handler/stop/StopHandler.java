@@ -12,7 +12,7 @@ public class StopHandler extends BaseHandler<RemoteControlModel> {
 
     @Override
     public void handle(RemoteControlModel model) {
-        if(model.isStop()) {
+        if(model.getDirection() == 0) {
             stopListener.stop();
         }
         if(hasNext()) {

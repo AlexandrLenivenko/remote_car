@@ -23,7 +23,7 @@ public class CarPeripheralManager implements CarPeripheralListener {
     private final L298nDriver l298nDriver;
 
     @Inject
-    public CarPeripheralManager(ULN2003StepperMotor uln2003StepperMotor, BlinkingDriver blinkingDriver, L298nDriver l298nDriver) {
+    CarPeripheralManager(ULN2003StepperMotor uln2003StepperMotor, BlinkingDriver blinkingDriver, L298nDriver l298nDriver) {
         compositeDisposable = new CompositeDisposable();
         this.uln2003StepperMotor = uln2003StepperMotor;
         this.blinkingDriver = blinkingDriver;
@@ -36,6 +36,7 @@ public class CarPeripheralManager implements CarPeripheralListener {
         uln2003StepperMotor.rotate(degree, direction, ULN2003Resolution.FULL.getId(), 50);
     }
 
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     @SuppressLint("CheckResult")
     @Override
     public void blink(List<Boolean> times) {
@@ -52,7 +53,7 @@ public class CarPeripheralManager implements CarPeripheralListener {
             compositeDisposable.clear();
             l298nDriver.close();
         }catch (Exception e) {
-
+            e.printStackTrace();
         }
     }
 
@@ -64,7 +65,7 @@ public class CarPeripheralManager implements CarPeripheralListener {
     }
 
     @Override
-    public void move(int direction) {
-        l298nDriver.move(direction);
+    public void move(int direction, int speed) {
+        l298nDriver.move(direction, speed);
     }
 }

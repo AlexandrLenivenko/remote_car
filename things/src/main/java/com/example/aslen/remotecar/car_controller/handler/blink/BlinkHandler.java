@@ -15,9 +15,7 @@ public class BlinkHandler extends BaseHandler<RemoteControlModel> {
 
     @Override
     public void handle(RemoteControlModel model) {
-        if (model.isUp()) {
-            blinkListener.blink(Arrays.asList(true, false));
-        } else if (model.isDown()) {
+        if (model.getRotation() == 0) {
             blinkListener.blink(Arrays.asList(true, false, true, false));
         }
 

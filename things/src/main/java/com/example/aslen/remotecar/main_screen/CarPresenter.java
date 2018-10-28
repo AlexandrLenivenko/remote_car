@@ -25,6 +25,7 @@ public class CarPresenter extends BasePresenter<CarView> {
         this.carPeripheralManager = carPeripheralManager;
     }
 
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     @SuppressLint("CheckResult")
     @Override
     public void onStart() {

@@ -30,7 +30,7 @@ class DriverModule {
 
     @Provides
     L298nDriver provideL298nDriver(PeripheralManager peripheralManager) {
-        return  new L298nDriver(peripheralManager, GpioContract.L298nDriver.IN_1, GpioContract.L298nDriver.IN_2);
+        return  new L298nDriver(peripheralManager, GpioContract.L298nDriver.IN_1, GpioContract.L298nDriver.IN_2, GpioContract.L298nDriver.IN_3);
     }
 
     @Provides

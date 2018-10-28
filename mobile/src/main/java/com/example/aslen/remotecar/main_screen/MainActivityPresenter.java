@@ -8,12 +8,19 @@ import com.example.common.remote_control_service.RemoteControlService;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 
+import static com.example.common.models.RemoteControlModel.Contract.IGNORE_DIRECTION_CHANGES;
+import static com.example.common.models.RemoteControlModel.Contract.PR_25;
+import static com.example.common.models.RemoteControlModel.Contract.ROTATION_ANGLE;
+import static com.example.common.models.RemoteControlModel.Contract.STOP;
+
 public class MainActivityPresenter extends BasePresenter<MainView> {
 
     private final RemoteControlService remoteControlService;
+    private RemoteControlModel model;
 
     public MainActivityPresenter(RemoteControlService remoteControlService) {
         this.remoteControlService = remoteControlService;
+        model = new RemoteControlModel(0, 0);
     }
 
     @Override
@@ -37,32 +44,29 @@ public class MainActivityPresenter extends BasePresenter<MainView> {
     }
 
     void onStopMoving() {
-        RemoteControlModel remoteControlModel = new RemoteControlModel();
-        remoteControlModel.setStop();
-        remoteControlService.sendMessage(remoteControlModel);
+        model = new RemoteControlModel(STOP, 0);
+        remoteControlService.sendMessage(model);
     }
 
     void onUp() {
-        RemoteControlModel remoteControlModel = new RemoteControlModel();
-        remoteControlModel.setUp();
+        RemoteControlModel remoteControlModel = new RemoteControlModel(model.getDirection() + PR_25, 0);
+        model = remoteControlModel;
         remoteControlService.sendMessage(remoteControlModel);
     }
 
     void onDown() {
-        RemoteControlModel remoteControlModel = new RemoteControlModel();
-        remoteControlModel.setDown();
+        RemoteControlModel remoteControlModel = new RemoteControlModel(model.getDirection() - PR_25, 0);
+        model = remoteControlModel;
         remoteControlService.sendMessage(remoteControlModel);
     }
 
     void onLeft() {
-        RemoteControlModel remoteControlModel = new RemoteControlModel();
-        remoteControlModel.setLeft();
+        RemoteControlModel remoteControlModel = new RemoteControlModel(IGNORE_DIRECTION_CHANGES, -ROTATION_ANGLE);
         remoteControlService.sendMessage(remoteControlModel);
     }
 
     void onRight() {
-        RemoteControlModel remoteControlModel = new RemoteControlModel();
-        remoteControlModel.setRight();
+        RemoteControlModel remoteControlModel = new RemoteControlModel(IGNORE_DIRECTION_CHANGES, ROTATION_ANGLE);
         remoteControlService.sendMessage(remoteControlModel);
     }
 

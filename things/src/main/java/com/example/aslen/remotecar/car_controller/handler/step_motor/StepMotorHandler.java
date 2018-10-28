@@ -14,10 +14,8 @@ public class StepMotorHandler extends BaseHandler<RemoteControlModel> {
 
     @Override
     public void handle(RemoteControlModel model) {
-        if (model.isLeft()) {
-            motorListener.rotate(30, Direction.CLOCKWISE);
-        }else if (model.isRight()) {
-            motorListener.rotate(30, Direction.COUNTERCLOCKWISE);
+        if(model.getRotation() != 0) {
+            motorListener.rotate(Math.abs(model.getRotation()), model.getRotation() > 0 ? Direction.CLOCKWISE : Direction.COUNTERCLOCKWISE);
         }
 
         if (hasNext()) {

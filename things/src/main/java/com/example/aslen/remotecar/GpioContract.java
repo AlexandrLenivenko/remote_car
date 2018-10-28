@@ -16,5 +16,6 @@ public interface GpioContract {
     interface L298nDriver {
         String IN_1 = "BCM6";
         String IN_2 = "BCM5";
+        String IN_3 = "PWM1";
     }
 }
