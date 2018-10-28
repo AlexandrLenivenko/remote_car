@@ -4,8 +4,10 @@ import com.example.aslen.remotecar.steppermotor.driver.uln2003.driver.ULN2003
 import com.example.aslen.remotecar.steppermotor.driver.uln2003.driver.ULN2003Resolution
 import com.example.step_motor.steppermotor.Direction
 import com.example.step_motor.steppermotor.motor.StepperMotor
+import com.google.android.things.pio.PeripheralManager
 
-class ULN2003StepperMotor(in1GpioId: String,
+class ULN2003StepperMotor(peripheralManager: PeripheralManager,
+                          in1GpioId: String,
                           in2GpioId: String,
                           in3GpioId: String,
                           in4GpioId: String) : StepperMotor() {
@@ -15,7 +17,7 @@ class ULN2003StepperMotor(in1GpioId: String,
     init {
         uln2003 = ULN2003(in1GpioId, in2GpioId, in3GpioId, in4GpioId)
         stepperMotorDriver = uln2003
-        stepperMotorDriver.open()
+        stepperMotorDriver.open(peripheralManager)
     }
 
     fun stop() {uln2003.stop()}
@@ -36,7 +38,7 @@ class ULN2003StepperMotor(in1GpioId: String,
 
     companion object {
         /**
-         * @see <a href="http://42bots.com/tutorials/28byj-48-stepper-motor-with-uln2003-driver-and-arduino-uno/">28BYJ-48 Stepper Motor tutorial</a>
+         * @see <a href="http://42bots.com/tutorials/28byj-48-stepper-motor-with-uln2003-driver-and-arduino-uno/">28BYJ-48 Stepper L298nDriver tutorial</a>
          */
         val HALF_STEPS_PER_REVOLUTION = 4076
         val FULL_STEPS_PER_REVOLUTION = HALF_STEPS_PER_REVOLUTION / 2

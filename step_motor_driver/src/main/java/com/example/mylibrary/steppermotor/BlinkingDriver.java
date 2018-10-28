@@ -5,13 +5,13 @@ import com.google.android.things.pio.PeripheralManager;
 
 import java.io.IOException;
 
-public class BlinckingDriver implements AutoCloseable   {
+public class BlinkingDriver implements AutoCloseable   {
 
     private Gpio ledGpio;
 
-    public BlinckingDriver(String pinName) {
+    public BlinkingDriver(PeripheralManager peripheralManager, String pinName) {
         try {
-            ledGpio = PeripheralManager.getInstance().openGpio(pinName);
+            ledGpio = peripheralManager.openGpio(pinName);
             ledGpio.setDirection(Gpio.DIRECTION_OUT_INITIALLY_LOW);
         } catch (IOException e) {
             e.printStackTrace();

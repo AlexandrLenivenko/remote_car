@@ -7,6 +7,7 @@ import com.example.step_motor.steppermotor.driver.StepDuration
 import com.example.step_motor.steppermotor.driver.StepperMotorDriver
 import com.example.step_motor.steppermotor.gpio.GpioFactory
 import com.example.step_motor.steppermotor.gpio.StepperMotorGpio
+import com.google.android.things.pio.PeripheralManager
 
 class ULN2003 internal constructor(private val in1GpioId: String,
                                    private val in2GpioId: String,
@@ -116,16 +117,16 @@ class ULN2003 internal constructor(private val in1GpioId: String,
         in4?.value = in4State
     }
 
-    override fun open() {
+    override fun open(peripheralManager: PeripheralManager) {
         if (gpiosOpened) {
             return
         }
 
         try {
-            in1 = StepperMotorGpio(gpioFactory.openGpio(in1GpioId))
-            in2 = StepperMotorGpio(gpioFactory.openGpio(in2GpioId))
-            in3 = StepperMotorGpio(gpioFactory.openGpio(in3GpioId))
-            in4 = StepperMotorGpio(gpioFactory.openGpio(in4GpioId))
+            in1 = StepperMotorGpio(gpioFactory.openGpio(in1GpioId, peripheralManager))
+            in2 = StepperMotorGpio(gpioFactory.openGpio(in2GpioId, peripheralManager))
+            in3 = StepperMotorGpio(gpioFactory.openGpio(in3GpioId, peripheralManager))
+            in4 = StepperMotorGpio(gpioFactory.openGpio(in4GpioId, peripheralManager))
             gpiosOpened = true
         } catch (e: Exception) {
             close()

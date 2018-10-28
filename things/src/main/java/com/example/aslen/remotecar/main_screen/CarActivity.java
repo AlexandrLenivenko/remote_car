@@ -10,11 +10,10 @@ import com.example.aslen.remotecar.App;
 import com.example.aslen.remotecar.R;
 import com.example.aslen.remotecar.steppermotor.driver.uln2003.driver.ULN2003Resolution;
 import com.example.aslen.remotecar.steppermotor.driver.uln2003.motor.ULN2003StepperMotor;
-import com.example.mylibrary.steppermotor.BlinckingDriver;
+import com.example.mylibrary.steppermotor.BlinkingDriver;
 import com.example.step_motor.steppermotor.Direction;
 import com.google.android.things.pio.PeripheralManager;
 
-import java.io.IOException;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -27,7 +26,7 @@ public class CarActivity extends Activity implements CarView {
     private TextView messageTextView;
     private ULN2003StepperMotor uln2003StepperMotor;
     private boolean isClockWise;
-    private BlinckingDriver blinckingDriver;
+    private BlinkingDriver blinckingDriver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +40,7 @@ public class CarActivity extends Activity implements CarView {
 
         //uln2003StepperMotor = new ULN2003StepperMotor("BCM4", "BCM17", "BCM27", "BCM22");
         String pinName = "BCM2";
-       // blinckingDriver = new BlinckingDriver(pinName);
+       // blinckingDriver = new BlinkingDriver(pinName);
 
         findViewById(R.id.btn_rotate).setOnClickListener(view -> {
             isClockWise = !isClockWise;

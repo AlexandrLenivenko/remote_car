@@ -1,7 +1,7 @@
-package com.example.aslen.remotecar.car_controller.step_motor;
+package com.example.aslen.remotecar.car_controller.handler.step_motor;
 
 import com.example.step_motor.steppermotor.Direction;
 
-public interface StepMotorView {
+public interface StepMotorListener {
     void rotate(int degree, Direction direction);
 }

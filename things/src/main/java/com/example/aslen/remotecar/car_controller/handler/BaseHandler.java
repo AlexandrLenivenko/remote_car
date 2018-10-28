@@ -1,4 +1,4 @@
-package com.example.aslen.remotecar.car_controller;
+package com.example.aslen.remotecar.car_controller.handler;
 
 public abstract class BaseHandler<M> {
     protected BaseHandler<M> next;
