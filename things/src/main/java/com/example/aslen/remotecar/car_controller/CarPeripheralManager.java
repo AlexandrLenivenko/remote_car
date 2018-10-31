@@ -5,13 +5,14 @@ import android.annotation.SuppressLint;
 import com.example.aslen.remotecar.steppermotor.driver.uln2003.driver.ULN2003Resolution;
 import com.example.aslen.remotecar.steppermotor.driver.uln2003.motor.ULN2003StepperMotor;
 import com.example.mylibrary.steppermotor.BlinkingDriver;
-import com.example.mylibrary.steppermotor.L298nDriver;
+import com.example.mylibrary.steppermotor.l298n.L298nDriver;
 import com.example.step_motor.steppermotor.Direction;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
@@ -23,7 +24,7 @@ public class CarPeripheralManager implements CarPeripheralListener {
     private final L298nDriver l298nDriver;
 
     @Inject
-    CarPeripheralManager(ULN2003StepperMotor uln2003StepperMotor, BlinkingDriver blinkingDriver, L298nDriver l298nDriver) {
+    CarPeripheralManager(ULN2003StepperMotor uln2003StepperMotor, BlinkingDriver blinkingDriver, @Named("OneEngine") L298nDriver l298nDriver) {
         compositeDisposable = new CompositeDisposable();
         this.uln2003StepperMotor = uln2003StepperMotor;
         this.blinkingDriver = blinkingDriver;

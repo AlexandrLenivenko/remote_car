@@ -4,8 +4,12 @@ import com.example.aslen.remotecar.GpioContract;
 import com.example.aslen.remotecar.steppermotor.driver.uln2003.motor.ULN2003StepperMotor;
 
 import com.example.mylibrary.steppermotor.BlinkingDriver;
-import com.example.mylibrary.steppermotor.L298nDriver;
+import com.example.mylibrary.steppermotor.l298n.L298nDriver;
+import com.example.mylibrary.steppermotor.l298n.L298nDriverOneEngine;
+import com.example.mylibrary.steppermotor.l298n.L298nDriverTwoEngines;
 import com.google.android.things.pio.PeripheralManager;
+
+import javax.inject.Named;
 
 import dagger.Module;
 import dagger.Provides;
@@ -25,12 +29,21 @@ class DriverModule {
 
     @Provides
     BlinkingDriver provideBlinkingDriver(PeripheralManager peripheralManager) {
-        return  new BlinkingDriver(peripheralManager, GpioContract.BlinkingDriver.IN_1);
+        return new BlinkingDriver(peripheralManager, GpioContract.BlinkingDriver.IN_1);
     }
 
     @Provides
-    L298nDriver provideL298nDriver(PeripheralManager peripheralManager) {
-        return  new L298nDriver(peripheralManager, GpioContract.L298nDriver.IN_1, GpioContract.L298nDriver.IN_2, GpioContract.L298nDriver.IN_3);
+    @Named("OneEngine")
+    L298nDriver provideL298nDriverOneEngine(PeripheralManager peripheralManager) {
+        return new L298nDriverOneEngine(peripheralManager, GpioContract.L298nDriver.IN_1, GpioContract.L298nDriver.IN_2, GpioContract.L298nDriver.PWM1);
+    }
+
+    @Provides
+    @Named("TwoEngine")
+    L298nDriver provideL298nDriverTwoEngine(PeripheralManager peripheralManager) {
+        return new L298nDriverTwoEngines(peripheralManager, GpioContract.L298nDriver.IN_1,
+                GpioContract.L298nDriver.IN_2, GpioContract.L298nDriver.PWM1, GpioContract.L298nDriver.IN_3,
+                GpioContract.L298nDriver.IN_4, GpioContract.L298nDriver.PWM2);
     }
 
     @Provides

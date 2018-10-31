@@ -38,7 +38,7 @@ class ULN2003StepperMotor(peripheralManager: PeripheralManager,
 
     companion object {
         /**
-         * @see <a href="http://42bots.com/tutorials/28byj-48-stepper-motor-with-uln2003-driver-and-arduino-uno/">28BYJ-48 Stepper L298nDriver tutorial</a>
+         * @see <a href="http://42bots.com/tutorials/28byj-48-stepper-motor-with-uln2003-driver-and-arduino-uno/">28BYJ-48 Stepper L298nDriverOneEngine tutorial</a>
          */
         val HALF_STEPS_PER_REVOLUTION = 4076
         val FULL_STEPS_PER_REVOLUTION = HALF_STEPS_PER_REVOLUTION / 2
