@@ -12,10 +12,11 @@ import android.widget.TextView;
 
 import com.example.aslen.remotecar.App;
 import com.example.aslen.remotecar.R;
+import com.example.joy_stick.JoystickView;
 
 import javax.inject.Inject;
 
-public class MainActivity extends AppCompatActivity implements MainView {
+public class MainActivity extends AppCompatActivity implements MainView, JoystickView.JoystickListener {
 
     @Inject
     protected MainActivityPresenter presenter;
@@ -39,11 +40,13 @@ public class MainActivity extends AppCompatActivity implements MainView {
 
     private void findViews() {
         serverIpAddress = findViewById(R.id.edt_server_ip);
-        findViewById(R.id.img_up).setOnClickListener(view -> presenter.onUp());
+        JoystickView joystickView = findViewById(R.id.joystick);
+        joystickView.setJoystickListener(this);
+/*        findViewById(R.id.img_up).setOnClickListener(view -> presenter.onUp());
         findViewById(R.id.img_down).setOnClickListener(view -> presenter.onDown());
         findViewById(R.id.img_left).setOnClickListener(view -> presenter.onLeft());
         findViewById(R.id.img_right).setOnClickListener(view -> presenter.onRight());
-        findViewById(R.id.img_stop).setOnClickListener(view -> presenter.onStopMoving());
+        findViewById(R.id.img_stop).setOnClickListener(view -> presenter.onStopMoving());*/
         findViewById(R.id.btn_connect).setOnClickListener(view -> presenter.onConnect(serverIpAddress.getText().toString()));
         messageTextView = findViewById(R.id.tv_message);
         messageTextView.setOnClickListener(view -> presenter.onDisconnectClicked());
@@ -70,6 +73,31 @@ public class MainActivity extends AppCompatActivity implements MainView {
         presenter.onAttachView(this);
         presenter.onStart();
         super.onStart();
+    }
+
+    @Override
+    public void onLeft() {
+        presenter.onLeft();
+    }
+
+    @Override
+    public void onRight() {
+        presenter.onRight();
+    }
+
+    @Override
+    public void onForward() {
+        presenter.onUp();
+    }
+
+    @Override
+    public void onBackward() {
+        presenter.onDown();
+    }
+
+    @Override
+    public void onStopMoving() {
+        presenter.onStopMoving();
     }
 
     @Override

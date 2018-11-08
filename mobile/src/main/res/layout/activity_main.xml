@@ -7,6 +7,11 @@
     android:background="@android:color/black"
     tools:context=".main_screen.MainActivity">
 
+    <com.example.joy_stick.JoystickView
+        android:id="@+id/joystick"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
     <TextView
         android:id="@+id/tv_message"
         android:layout_width="wrap_content"
@@ -21,64 +26,13 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0" />
 
-    <ImageButton
-        android:id="@+id/img_up"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="72dp"
-        android:layout_marginEnd="96dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_keyboard_arrow_up" />
-
-    <ImageButton
-        android:id="@+id/img_down"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="72dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/img_up"
-        app:layout_constraintStart_toStartOf="@+id/img_up"
-        app:srcCompat="@drawable/ic_keyboard_arrow_down" />
-
-    <ImageButton
-        android:id="@+id/img_right"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toBottomOf="@+id/img_down"
-        app:layout_constraintStart_toEndOf="@+id/img_up"
-        app:layout_constraintTop_toTopOf="@+id/img_up"
-        app:srcCompat="@drawable/ic_keyboard_arrow_right" />
-
-    <ImageButton
-        android:id="@+id/img_left"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="24dp"
-        app:layout_constraintBottom_toBottomOf="@+id/img_down"
-        app:layout_constraintEnd_toStartOf="@+id/img_up"
-        app:layout_constraintTop_toTopOf="@+id/img_up"
-        app:srcCompat="@drawable/ic_keyboard_arrow_left" />
-
-    <ImageButton
-        android:id="@+id/img_stop"
-        android:layout_width="96dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="48dp"
-        app:layout_constraintBottom_toBottomOf="@+id/img_left"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/img_left"
-        app:srcCompat="@drawable/ic_stop" />
 
     <EditText
         android:id="@+id/edt_server_ip"
-        android:layout_width="219dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="72dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginStart="76dp"
+        android:layout_marginTop="8dp"
         android:ems="10"
         android:hint="@string/enter_server_ip"
         android:imeOptions="flagNoExtractUi"
@@ -88,37 +42,33 @@
         android:textColorHint="@android:color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_message"
-        app:layout_constraintVertical_bias="0.497" />
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <Button
         android:id="@+id/btn_connect"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
         android:text="@string/connect"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/edt_server_ip"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.853"
         app:layout_constraintStart_toEndOf="@+id/edt_server_ip"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.589" />
+        app:layout_constraintTop_toTopOf="@+id/edt_server_ip" />
 
     <android.support.constraint.Group
         android:id="@+id/group_play"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone"
-        app:constraint_referenced_ids="img_up, img_down, img_left, img_right, img_stop"
-        tools:visibility="visible" />
+        app:constraint_referenced_ids="joystick"
+        tools:visibility="gone" />
 
     <android.support.constraint.Group
         android:id="@+id/group_connect"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:constraint_referenced_ids="edt_server_ip, btn_connect "
-        tools:visibility="gone" />
+        tools:visibility="visible" />
 </android.support.constraint.ConstraintLayout>
