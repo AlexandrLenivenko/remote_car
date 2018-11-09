@@ -1,6 +1,7 @@
 package com.example.mylibrary.steppermotor.light_driver;
 
 
+import android.util.Log;
 import android.util.SparseArray;
 
 import com.example.mylibrary.steppermotor.light_driver.light_command.OneStateLightDriver;
@@ -17,7 +18,7 @@ import static com.example.mylibrary.steppermotor.light_driver.CarLightDriver.Lig
 import static com.example.mylibrary.steppermotor.light_driver.CarLightDriver.LightState.RIGHT;
 
 public class CarLightDriver implements LightDriver {
-
+    private static final String TAG = "CarLightDriver";
 
     private final SparseArray<BaseCommand> commandArray;
 
@@ -79,12 +80,12 @@ public class CarLightDriver implements LightDriver {
             gpio.setDirection(Gpio.DIRECTION_OUT_INITIALLY_LOW);
             return gpio;
         } catch (IOException e) {
-
+            Log.e(TAG, "CarLightDriver getGpio: " + e.getMessage() );
         }
         return gpio;
     }
 
-    interface LightState {
+    public interface LightState {
         int FORWARD = 0;
         int BACKWARD = 1;
         int LEFT = 2;

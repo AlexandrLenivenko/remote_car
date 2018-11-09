@@ -7,6 +7,8 @@ import com.example.mylibrary.steppermotor.BlinkingDriver;
 import com.example.mylibrary.steppermotor.l298n.L298nDriver;
 import com.example.mylibrary.steppermotor.l298n.L298nDriverOneEngine;
 import com.example.mylibrary.steppermotor.l298n.L298nDriverTwoEngines;
+import com.example.mylibrary.steppermotor.light_driver.CarLightDriver;
+import com.example.mylibrary.steppermotor.light_driver.LightDriver;
 import com.google.android.things.pio.PeripheralManager;
 
 import javax.inject.Named;
@@ -44,6 +46,11 @@ class DriverModule {
         return new L298nDriverTwoEngines(peripheralManager, GpioContract.L298nDriver.IN_1,
                 GpioContract.L298nDriver.IN_2, GpioContract.L298nDriver.PWM1, GpioContract.L298nDriver.IN_3,
                 GpioContract.L298nDriver.IN_4, GpioContract.L298nDriver.PWM2);
+    }
+
+    @Provides
+    LightDriver provideCarLightDriver(PeripheralManager peripheralManager) {
+        return new CarLightDriver(peripheralManager, GpioContract.CarLightDriver.PINS);
     }
 
     @Provides

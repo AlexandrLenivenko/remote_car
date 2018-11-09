@@ -6,6 +6,9 @@ import com.example.aslen.remotecar.steppermotor.driver.uln2003.driver.ULN2003Res
 import com.example.aslen.remotecar.steppermotor.driver.uln2003.motor.ULN2003StepperMotor;
 import com.example.mylibrary.steppermotor.BlinkingDriver;
 import com.example.mylibrary.steppermotor.l298n.L298nDriver;
+import com.example.mylibrary.steppermotor.l298n.L298nDriverOneEngine;
+import com.example.mylibrary.steppermotor.light_driver.CarLightDriver;
+import com.example.mylibrary.steppermotor.light_driver.LightDriver;
 import com.example.step_motor.steppermotor.Direction;
 
 import java.util.List;
@@ -22,19 +25,23 @@ public class CarPeripheralManager implements CarPeripheralListener {
     private final BlinkingDriver blinkingDriver;
     private final CompositeDisposable compositeDisposable;
     private final L298nDriver l298nDriver;
+    private final LightDriver lightDriver;
 
     @Inject
-    CarPeripheralManager(ULN2003StepperMotor uln2003StepperMotor, BlinkingDriver blinkingDriver, @Named("OneEngine") L298nDriver l298nDriver) {
+    CarPeripheralManager(ULN2003StepperMotor uln2003StepperMotor, BlinkingDriver blinkingDriver,
+                         @Named("OneEngine") L298nDriver l298nDriver, LightDriver lightDriver) {
         compositeDisposable = new CompositeDisposable();
         this.uln2003StepperMotor = uln2003StepperMotor;
         this.blinkingDriver = blinkingDriver;
         this.l298nDriver = l298nDriver;
+        this.lightDriver = lightDriver;
     }
 
     @Override
     public void rotate(int degree, Direction direction) {
         uln2003StepperMotor.abortAllRotations();
         uln2003StepperMotor.rotate(degree, direction, ULN2003Resolution.FULL.getId(), 50);
+        lightDriver.invoke(direction == Direction.CLOCKWISE ? CarLightDriver.LightState.RIGHT : CarLightDriver.LightState.LEFT);
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
@@ -53,6 +60,7 @@ public class CarPeripheralManager implements CarPeripheralListener {
             blinkingDriver.close();
             compositeDisposable.clear();
             l298nDriver.close();
+            lightDriver.destroy();
         }catch (Exception e) {
             e.printStackTrace();
         }
@@ -63,10 +71,12 @@ public class CarPeripheralManager implements CarPeripheralListener {
         uln2003StepperMotor.stop();
         blinkingDriver.setState(false);
         l298nDriver.stop();
+        lightDriver.invoke(CarLightDriver.LightState.ALL);
     }
 
     @Override
     public void move(int direction, int speed) {
         l298nDriver.move(direction, speed);
+        lightDriver.invoke(direction == L298nDriverOneEngine.Direction.UP ? CarLightDriver.LightState.FORWARD : CarLightDriver.LightState.BACKWARD);
     }
 }
