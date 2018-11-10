@@ -8,9 +8,6 @@ import android.widget.TextView;
 
 import com.example.aslen.remotecar.App;
 import com.example.aslen.remotecar.R;
-import com.example.aslen.remotecar.steppermotor.driver.uln2003.driver.ULN2003Resolution;
-import com.example.aslen.remotecar.steppermotor.driver.uln2003.motor.ULN2003StepperMotor;
-import com.example.mylibrary.steppermotor.BlinkingDriver;
 import com.example.step_motor.steppermotor.Direction;
 import com.google.android.things.pio.PeripheralManager;
 
@@ -24,9 +21,6 @@ public class CarActivity extends Activity implements CarView {
     @Inject
     protected CarPresenter presenter;
     private TextView messageTextView;
-    private ULN2003StepperMotor uln2003StepperMotor;
-    private boolean isClockWise;
-    private BlinkingDriver blinckingDriver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,16 +32,6 @@ public class CarActivity extends Activity implements CarView {
 
         showPins();
 
-        //uln2003StepperMotor = new ULN2003StepperMotor("BCM4", "BCM17", "BCM27", "BCM22");
-        String pinName = "BCM2";
-       // blinckingDriver = new BlinkingDriver(pinName);
-
-        findViewById(R.id.btn_rotate).setOnClickListener(view -> {
-            isClockWise = !isClockWise;
-            uln2003StepperMotor.abortAllRotations();
-            uln2003StepperMotor.rotate(270.0, isClockWise ? Direction.CLOCKWISE : Direction.COUNTERCLOCKWISE, ULN2003Resolution.FULL.getId(), 100);
-
-        });
         presenter.onAttachView(this);
     }
 
@@ -64,7 +48,6 @@ public class CarActivity extends Activity implements CarView {
     @Override
     protected void onPause() {
         presenter.onDetachView();
-        uln2003StepperMotor.close();
         super.onPause();
     }
 
@@ -83,13 +66,11 @@ public class CarActivity extends Activity implements CarView {
     @Override
     protected void onDestroy() {
         presenter.onDestroy();
-        blinckingDriver.close();
         super.onDestroy();
     }
 
     @Override
     public void turnOnOff(boolean isOn) {
-        blinckingDriver.setState(isOn);
     }
 
     @Override
@@ -104,8 +85,6 @@ public class CarActivity extends Activity implements CarView {
 
     @Override
     public void rotate(int degree, Direction direction) {
-        uln2003StepperMotor.abortAllRotations();
-        uln2003StepperMotor.rotate(degree, direction, ULN2003Resolution.FULL.getId(), 50);
     }
 
     public void close(View view) {

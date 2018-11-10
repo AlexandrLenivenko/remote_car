@@ -17,8 +17,20 @@ public interface GpioContract {
         String IN_1 = "BCM6";
         String IN_2 = "BCM5";
         String PWM1 = "PWM1";
-        String IN_3 = "BCM6";//todo: add correct number when find
-        String IN_4 = "BCM5";//todo: add correct number when find
-        String PWM2 = "PWM1";//todo: add correct number when find
+        String IN_3 = "BCM?";//todo: add correct number when find
+        String IN_4 = "BCM?";//todo: add correct number when find
+        String PWM2 = "PWM?";//todo: add correct number when find
+    }
+
+    interface CarLightDriver {
+        String IN_1 = "BCM?"; //todo: find pins
+        String IN_2 = "BCM?"; //todo: find pins
+        String IN_3 = "BCM?"; //todo: find pins
+        String IN_4 = "BCM?"; //todo: find pins
+        String IN_5 = "BCM?"; //todo: find pins
+        String IN_6 = "BCM?"; //todo: find pins
+        String IN_7 = "BCM?"; //todo: find pins
+        String IN_8 = "BCM?"; //todo: find pins
+        String[] PINS = new String[] {IN_1, IN_2, IN_3, IN_4,IN_5, IN_6,IN_7, IN_8,};
     }
 }
