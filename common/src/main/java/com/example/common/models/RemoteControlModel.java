@@ -40,7 +40,7 @@ public class RemoteControlModel {
         int PR_75 = 75;
         int PR_100 = 100;
         int IGNORE_DIRECTION_CHANGES = -1000;
-        int ROTATION_ANGLE = 10;
+        int ROTATION_ANGLE = 30;
     }
 
 }

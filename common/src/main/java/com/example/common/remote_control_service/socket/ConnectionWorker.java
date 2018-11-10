@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.example.common.models.RemoteControlModel;
 import com.example.common.parser.BaseParser;
+import com.google.gson.JsonSyntaxException;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -40,7 +41,12 @@ public class ConnectionWorker implements Runnable {
                 if (count > 0) {
                     String response = new String(buffer, 0, count);
                     Log.d(TAG, response);
-                    subject.onNext(clientParser.parse(response));
+                    try{
+                        RemoteControlModel parse = clientParser.parse(response);
+                        subject.onNext(parse);
+                    }catch (JsonSyntaxException e) {
+
+                    }
                 } else if (count == -1) {
                     Log.d(TAG, "close socket");
                     socket.close();

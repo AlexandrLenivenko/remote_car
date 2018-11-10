@@ -42,15 +42,9 @@ public class MainActivity extends AppCompatActivity implements MainView, Joystic
         serverIpAddress = findViewById(R.id.edt_server_ip);
         JoystickView joystickView = findViewById(R.id.joystick);
         joystickView.setJoystickListener(this);
-/*        findViewById(R.id.img_up).setOnClickListener(view -> presenter.onUp());
-        findViewById(R.id.img_down).setOnClickListener(view -> presenter.onDown());
-        findViewById(R.id.img_left).setOnClickListener(view -> presenter.onLeft());
-        findViewById(R.id.img_right).setOnClickListener(view -> presenter.onRight());
-        findViewById(R.id.img_stop).setOnClickListener(view -> presenter.onStopMoving());*/
         findViewById(R.id.btn_connect).setOnClickListener(view -> presenter.onConnect(serverIpAddress.getText().toString()));
         messageTextView = findViewById(R.id.tv_message);
         messageTextView.setOnClickListener(view -> presenter.onDisconnectClicked());
-
         playGroup = findViewById(R.id.group_play);
         connectGroup = findViewById(R.id.group_connect);
     }

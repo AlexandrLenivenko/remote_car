@@ -21,6 +21,11 @@ public class JoystickView extends View implements GestureDetector.OnGestureListe
     private static final String TAG = "JoystickView";
     private static final int SIZE = 60;
     private static final int MARGIN = 600;
+    public static final int DOWN_ARROW_ID = 0;
+    public static final int UP_ARROW_ID = 1;
+    public static final int LEFT_ARROW_ID = 2;
+    public static final int RIGHT_ARROW_ID = 3;
+    public static final int STOP_ARROW_ID = 4;
     private final ArrowModel[] arrowModels = new ArrowModel[5];
     private SparseArray<PointF> activePointers;
     private int[] colors = {Color.BLUE, Color.GREEN, Color.MAGENTA,
@@ -70,7 +75,6 @@ public class JoystickView extends View implements GestureDetector.OnGestureListe
         }
     };
 
-
     public JoystickView(Context context) {
         super(context);
         init(context, null);
@@ -80,7 +84,6 @@ public class JoystickView extends View implements GestureDetector.OnGestureListe
         super(context, attrs);
         init(context, attrs);
     }
-
 
     public JoystickView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
@@ -110,10 +113,10 @@ public class JoystickView extends View implements GestureDetector.OnGestureListe
         fontPaint.setTextSize(66);
         fontPaint.setStyle(Paint.Style.STROKE);
         fontPaint.setColor(Color.BLACK);
-        setBackgroundColor(Color.BLACK);
         paint = new Paint();
         colorPaint = new Paint();
         redPaint = new Paint();
+        redPaint.setStyle(Paint.Style.STROKE);
         redPaint.setColor(Color.RED);
         bitmapConventor = new BitmapConverter(getResources());
 
@@ -123,11 +126,11 @@ public class JoystickView extends View implements GestureDetector.OnGestureListe
         arrowRight = bitmapConventor.createBitmap(R.drawable.ic_keyboard_arrow_right);
         stop = bitmapConventor.createBitmap(R.drawable.ic_stop);
 
-        arrowModels[0] = new ArrowModel(arrowDown, new Paint());
-        arrowModels[1] = new ArrowModel(arrowUp, new Paint());
-        arrowModels[2] = new ArrowModel(arrowLeft, new Paint());
-        arrowModels[3] = new ArrowModel(arrowRight, new Paint());
-        arrowModels[4] = new ArrowModel(stop, new Paint());
+        arrowModels[DOWN_ARROW_ID] = new ArrowModel(arrowDown, new Paint());
+        arrowModels[UP_ARROW_ID] = new ArrowModel(arrowUp, new Paint());
+        arrowModels[LEFT_ARROW_ID] = new ArrowModel(arrowLeft, new Paint());
+        arrowModels[RIGHT_ARROW_ID] = new ArrowModel(arrowRight, new Paint());
+        arrowModels[STOP_ARROW_ID] = new ArrowModel(stop, new Paint());
 
         rectLeft = new RectF();
         rectRight = new RectF();
@@ -140,16 +143,16 @@ public class JoystickView extends View implements GestureDetector.OnGestureListe
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
-        arrowModels[0].setLeft(right - MARGIN);
-        arrowModels[0].setTop(bottom - MARGIN + 100);
-        arrowModels[1].setLeft(right - MARGIN);
-        arrowModels[1].setTop(-100);
-        arrowModels[2].setLeft(-100);
-        arrowModels[2].setTop(bottom / 2 - 320);
-        arrowModels[3].setLeft(300);
-        arrowModels[3].setTop(bottom / 2 - 320);
-        arrowModels[4].setLeft(right / 2 - 100);
-        arrowModels[4].setTop(bottom / 2 - 160);
+        arrowModels[DOWN_ARROW_ID].setLeft(right - MARGIN);
+        arrowModels[DOWN_ARROW_ID].setTop(bottom - MARGIN + 100);
+        arrowModels[UP_ARROW_ID].setLeft(right - MARGIN);
+        arrowModels[UP_ARROW_ID].setTop(-100);
+        arrowModels[LEFT_ARROW_ID].setLeft(-100);
+        arrowModels[LEFT_ARROW_ID].setTop(bottom / 2 - 320);
+        arrowModels[RIGHT_ARROW_ID].setLeft(300);
+        arrowModels[RIGHT_ARROW_ID].setTop(bottom / 2 - 320);
+        arrowModels[STOP_ARROW_ID].setLeft(right / 2 - 100);
+        arrowModels[STOP_ARROW_ID].setTop(bottom / 2 - 160);
 
         rectLeft.left = 0;
         rectLeft.top = 0;
@@ -180,27 +183,16 @@ public class JoystickView extends View implements GestureDetector.OnGestureListe
 
     @Override
     protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+/*        canvas.drawRect(rectLeft, redPaint);
+        canvas.drawRect(rectRight, redPaint);
+        canvas.drawRect(rectStop, redPaint);
+        canvas.drawRect(rectForward, redPaint);
+        canvas.drawRect(rectDown, redPaint);*/
+
         for (int i = 0; i < arrowModels.length; i++) {
             canvas.drawBitmap(arrowModels[i].getBitmap(), arrowModels[i].getLeft(), arrowModels[i].getTop(), arrowModels[i].getPaint());
         }
-
-        // draw all pointers
-/*        for (int size = activePointers.size(), i = 0; i < size; i++) {
-            PointF point = activePointers.valueAt(i);
-            if (point != null)
-                colorPaint.setColor(colors[i % 9]);
-            canvas.drawCircle(point.x, point.y, SIZE, colorPaint);
-        }*/
-
-/*        canvas.drawRect(rectLeft, redPaint);
-        redPaint.setColor(Color.YELLOW);
-        canvas.drawRect(rectRight, redPaint);
-        redPaint.setColor(Color.GREEN);
-        canvas.drawRect(rectStop, redPaint);
-        redPaint.setColor(Color.BLUE);
-        canvas.drawRect(rectForward, redPaint);
-        redPaint.setColor(Color.GRAY);
-        canvas.drawRect(rectDown, redPaint);*/
         super.onDraw(canvas);
     }
 
@@ -279,12 +271,20 @@ public class JoystickView extends View implements GestureDetector.OnGestureListe
                 break;
             }
             case MotionEvent.ACTION_MOVE: { // a pointer was moved
-                onDownEvent(event.getX(pointerIndex), event.getY(pointerIndex));
+                onMotionEvent(event.getX(pointerIndex), event.getY(pointerIndex), event);
                 break;
             }
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_POINTER_UP:
             case MotionEvent.ACTION_CANCEL: {
+/*                if(!rectLeft.contains(event.getX(), getY()) && !rectRight.contains(event.getX(), getY())){
+                    arrowModels[DOWN_ARROW_ID].setSelected(false);
+                    arrowModels[UP_ARROW_ID].setSelected(false);
+                    arrowModels[LEFT_ARROW_ID].setSelected(false);
+                    arrowModels[RIGHT_ARROW_ID].setSelected(false);
+                    arrowModels[STOP_ARROW_ID].setSelected(true);
+                    listener.onStopMoving();
+                }*/
                 activePointers.remove(pointerId);
                 break;
             }
@@ -294,38 +294,125 @@ public class JoystickView extends View implements GestureDetector.OnGestureListe
         return true;
     }
 
+    private void onMotionEvent(float x, float y, MotionEvent event) {
+        if (rectLeft.contains(x, y)) {
+            Log.d(TAG, "onMotionEvent: rectLeft");
+            if (!arrowModels[LEFT_ARROW_ID].isSelected()) {
+                arrowModels[LEFT_ARROW_ID].setSelected(true);
+                arrowModels[RIGHT_ARROW_ID].setSelected(false);
+                arrowModels[STOP_ARROW_ID].setSelected(false);
+                listener.onLeft();
+            }else {
+                for (int size = event.getPointerCount(), i = 0; i < size; i++) {
+                    PointF point = activePointers.get(event.getPointerId(i));
+                    if (point != null) {
+                        if (point.x - x > 100) {
+                            point.x = x;
+                            point.y = y;
+                            if(arrowModels[LEFT_ARROW_ID].increase()) {
+                                listener.onLeft();
+                            }
+                        }
+                    }
+                }
+            }
+        } else if (rectRight.contains(x, y)) {
+            Log.d(TAG, "onMotionEvent: rectRight");
+            if (!arrowModels[RIGHT_ARROW_ID].isSelected()) {
+                arrowModels[RIGHT_ARROW_ID].setSelected(true);
+                arrowModels[LEFT_ARROW_ID].setSelected(false);
+                arrowModels[STOP_ARROW_ID].setSelected(false);
+                listener.onRight();
+            }
+        } else if (rectStop.contains(x, y)) {
+            Log.d(TAG, "onMotionEvent: rectStop");
+            if (!arrowModels[STOP_ARROW_ID].isSelected()) {
+                arrowModels[DOWN_ARROW_ID].setSelected(false);
+                arrowModels[UP_ARROW_ID].setSelected(false);
+                arrowModels[LEFT_ARROW_ID].setSelected(false);
+                arrowModels[RIGHT_ARROW_ID].setSelected(false);
+                arrowModels[STOP_ARROW_ID].setSelected(true);
+                listener.onStopMoving();
+            }
+        } else if (rectForward.contains(x, y)) {
+            Log.d(TAG, "onMotionEvent: rectForward");
+            if (!arrowModels[UP_ARROW_ID].isSelected()) {
+                arrowModels[UP_ARROW_ID].setSelected(true);
+                arrowModels[DOWN_ARROW_ID].setSelected(false);
+                arrowModels[STOP_ARROW_ID].setSelected(false);
+                listener.onForward();
+            }else {
+                for (int size = event.getPointerCount(), i = 0; i < size; i++) {
+                    PointF point = activePointers.get(event.getPointerId(i));
+                    if (point != null) {
+                        if (point.y - y > 100) {
+                            point.x = x;
+                            point.y = y;
+                            if(arrowModels[UP_ARROW_ID].increase()) {
+                                listener.onForward();
+                            }
+                        }
+                    }
+                }
+            }
+
+        } else if (rectDown.contains(x, y)) {
+            Log.d(TAG, "onMotionEvent: rectDown");
+            if (!arrowModels[DOWN_ARROW_ID].isSelected()) {
+                arrowModels[DOWN_ARROW_ID].setSelected(true);
+                arrowModels[UP_ARROW_ID].setSelected(false);
+                arrowModels[STOP_ARROW_ID].setSelected(false);
+                listener.onBackward();
+            }
+            else {
+                for (int size = event.getPointerCount(), i = 0; i < size; i++) {
+                    PointF point = activePointers.get(event.getPointerId(i));
+                    if (point != null) {
+                        if (y - point.y > 100) {
+                            point.x = x;
+                            point.y = y;
+                            if(arrowModels[DOWN_ARROW_ID].increase()) {
+                                listener.onBackward();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     private void onDownEvent(float x, float y) {
         if (rectLeft.contains(x, y)) {
             Log.d(TAG, "onDownEvent: rectLeft");
-            arrowModels[2].setSelected(true);
-            arrowModels[3].setSelected(false);
-            arrowModels[4].setSelected(false);
+            arrowModels[LEFT_ARROW_ID].setSelected(true);
+            arrowModels[RIGHT_ARROW_ID].setSelected(false);
+            arrowModels[STOP_ARROW_ID].setSelected(false);
             listener.onLeft();
         } else if (rectRight.contains(x, y)) {
             Log.d(TAG, "onDownEvent: rectRight");
-            arrowModels[3].setSelected(true);
-            arrowModels[2].setSelected(false);
-            arrowModels[4].setSelected(false);
+            arrowModels[RIGHT_ARROW_ID].setSelected(true);
+            arrowModels[LEFT_ARROW_ID].setSelected(false);
+            arrowModels[STOP_ARROW_ID].setSelected(false);
             listener.onRight();
         } else if (rectStop.contains(x, y)) {
             Log.d(TAG, "onDownEvent: rectStop");
-            arrowModels[0].setSelected(false);
-            arrowModels[1].setSelected(false);
-            arrowModels[2].setSelected(false);
-            arrowModels[3].setSelected(false);
-            arrowModels[4].setSelected(true);
+            arrowModels[DOWN_ARROW_ID].setSelected(false);
+            arrowModels[UP_ARROW_ID].setSelected(false);
+            arrowModels[LEFT_ARROW_ID].setSelected(false);
+            arrowModels[RIGHT_ARROW_ID].setSelected(false);
+            arrowModels[STOP_ARROW_ID].setSelected(true);
             listener.onStopMoving();
         } else if (rectForward.contains(x, y)) {
             Log.d(TAG, "onDownEvent: rectForward");
-            arrowModels[1].setSelected(true);
-            arrowModels[0].setSelected(false);
-            arrowModels[4].setSelected(false);
+            arrowModels[UP_ARROW_ID].setSelected(true);
+            arrowModels[DOWN_ARROW_ID].setSelected(false);
+            arrowModels[STOP_ARROW_ID].setSelected(false);
             listener.onForward();
         } else if (rectDown.contains(x, y)) {
             Log.d(TAG, "onDownEvent: rectDown");
-            arrowModels[0].setSelected(true);
-            arrowModels[1].setSelected(false);
-            arrowModels[4].setSelected(false);
+            arrowModels[DOWN_ARROW_ID].setSelected(true);
+            arrowModels[UP_ARROW_ID].setSelected(false);
+            arrowModels[STOP_ARROW_ID].setSelected(false);
             listener.onBackward();
         }
     }
@@ -336,6 +423,5 @@ public class JoystickView extends View implements GestureDetector.OnGestureListe
         void onForward();
         void onBackward();
         void onStopMoving();
-
     }
 }

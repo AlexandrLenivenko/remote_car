@@ -26,7 +26,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0" />
 
-
     <EditText
         android:id="@+id/edt_server_ip"
         android:layout_width="wrap_content"
@@ -71,4 +70,5 @@
         android:layout_height="wrap_content"
         app:constraint_referenced_ids="edt_server_ip, btn_connect "
         tools:visibility="visible" />
+
 </android.support.constraint.ConstraintLayout>
