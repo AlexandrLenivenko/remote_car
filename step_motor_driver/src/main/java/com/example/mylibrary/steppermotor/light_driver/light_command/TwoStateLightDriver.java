@@ -23,7 +23,7 @@ public class TwoStateLightDriver extends BaseCommand {
 
     @Override
     public void execute() {
-        Observable.interval(300, TimeUnit.MILLISECONDS)
+        Observable.interval(450, TimeUnit.MILLISECONDS)
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<Long>() {
             @Override
@@ -33,8 +33,8 @@ public class TwoStateLightDriver extends BaseCommand {
 
             @Override
             public void onNext(Long aLong) {
+                state = !state;
                 for (int i = 0; i < gpios.length; i++) {
-                    state = !state;
                     setState(gpios[i], state);
                 }
             }

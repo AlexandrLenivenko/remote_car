@@ -30,11 +30,6 @@ class DriverModule {
     }
 
     @Provides
-    BlinkingDriver provideBlinkingDriver(PeripheralManager peripheralManager) {
-        return new BlinkingDriver(peripheralManager, GpioContract.BlinkingDriver.IN_1);
-    }
-
-    @Provides
     @Named("OneEngine")
     L298nDriver provideL298nDriverOneEngine(PeripheralManager peripheralManager) {
         return new L298nDriverOneEngine(peripheralManager, GpioContract.L298nDriver.IN_1, GpioContract.L298nDriver.IN_2, GpioContract.L298nDriver.PWM1);

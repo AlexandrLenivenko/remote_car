@@ -23,14 +23,14 @@ public interface GpioContract {
     }
 
     interface CarLightDriver {
-        String IN_1 = "BCM?"; //todo: find pins
-        String IN_2 = "BCM?"; //todo: find pins
-        String IN_3 = "BCM?"; //todo: find pins
-        String IN_4 = "BCM?"; //todo: find pins
-        String IN_5 = "BCM?"; //todo: find pins
-        String IN_6 = "BCM?"; //todo: find pins
-        String IN_7 = "BCM?"; //todo: find pins
-        String IN_8 = "BCM?"; //todo: find pins
+        String IN_1 = "BCM14"; // forward
+        String IN_2 = "BCM15"; // forward
+        String IN_3 = "BCM10"; // backward right
+        String IN_4 = "BCM25"; // backward left
+        String IN_5 = "BCM20"; // left top
+        String IN_6 = "BCM8";  //left bottom
+        String IN_7 = "BCM21"; //right top
+        String IN_8 = "BCM9"; //right bottom
         String[] PINS = new String[] {IN_1, IN_2, IN_3, IN_4,IN_5, IN_6,IN_7, IN_8,};
     }
 }
