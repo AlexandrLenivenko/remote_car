@@ -37,7 +37,7 @@ public class CarActivity extends Activity implements CarView {
 
     private void showPins() {
         PeripheralManager manager = PeripheralManager.getInstance();
-        final List<String> portList = manager.getGpioList();
+        final List<String> portList = manager.getPwmList();
         if (portList.isEmpty()) {
             Log.i(TAG, "No GPIO port available on this device.");
         } else {
