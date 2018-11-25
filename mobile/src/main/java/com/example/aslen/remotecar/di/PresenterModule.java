@@ -1,6 +1,7 @@
 package com.example.aslen.remotecar.di;
 
 import com.example.aslen.remotecar.main_screen.MainActivityPresenter;
+import com.example.aslen.remotecar.settings.SettingsPreferencesService;
 import com.example.common.remote_control_service.RemoteControlService;
 
 import dagger.Module;
@@ -10,7 +11,7 @@ import dagger.Provides;
 public class PresenterModule {
 
     @Provides
-    MainActivityPresenter provideMainActivityPresenter(RemoteControlService service) {
-        return new MainActivityPresenter(service);
+    MainActivityPresenter provideMainActivityPresenter(RemoteControlService service, SettingsPreferencesService preferencesService) {
+        return new MainActivityPresenter(service, preferencesService);
     }
 }

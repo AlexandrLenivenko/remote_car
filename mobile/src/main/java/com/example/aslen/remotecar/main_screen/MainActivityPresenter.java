@@ -2,6 +2,7 @@ package com.example.aslen.remotecar.main_screen;
 
 import android.annotation.SuppressLint;
 
+import com.example.aslen.remotecar.settings.SettingsPreferencesService;
 import com.example.common.models.RemoteControlModel;
 import com.example.common.presenter.BasePresenter;
 import com.example.common.remote_control_service.RemoteControlService;
@@ -16,17 +17,19 @@ import static com.example.common.models.RemoteControlModel.Contract.STOP;
 public class MainActivityPresenter extends BasePresenter<MainView> {
 
     private final RemoteControlService remoteControlService;
+    private final SettingsPreferencesService settingsService;
     private RemoteControlModel model;
 
-    public MainActivityPresenter(RemoteControlService remoteControlService) {
+    public MainActivityPresenter(RemoteControlService remoteControlService, SettingsPreferencesService settingsService) {
         this.remoteControlService = remoteControlService;
+        this.settingsService = settingsService;
         model = new RemoteControlModel(0, 0);
     }
 
     @Override
     public void onStart() {
         runOnView(view -> {
-            view.showIpAddress(remoteControlService.getIpAddress());
+            view.showIpAddress(settingsService.getIpAddress());
             view.showConnectViews();
         });
     }
@@ -49,24 +52,24 @@ public class MainActivityPresenter extends BasePresenter<MainView> {
     }
 
     void onUp() {
-        RemoteControlModel remoteControlModel = new RemoteControlModel(model.getDirection() + PR_25, 0);
+        RemoteControlModel remoteControlModel = new RemoteControlModel(model.getDirection() + settingsService.getSpeedDelta(), 0);
         model = remoteControlModel;
         remoteControlService.sendMessage(remoteControlModel);
     }
 
     void onDown() {
-        RemoteControlModel remoteControlModel = new RemoteControlModel(model.getDirection() - PR_25, 0);
+        RemoteControlModel remoteControlModel = new RemoteControlModel(model.getDirection() - settingsService.getSpeedDelta(), 0);
         model = remoteControlModel;
         remoteControlService.sendMessage(remoteControlModel);
     }
 
     void onLeft() {
-        RemoteControlModel remoteControlModel = new RemoteControlModel(IGNORE_DIRECTION_CHANGES, -ROTATION_ANGLE);
+        RemoteControlModel remoteControlModel = new RemoteControlModel(IGNORE_DIRECTION_CHANGES, -settingsService.getRotationAngel());
         remoteControlService.sendMessage(remoteControlModel);
     }
 
     void onRight() {
-        RemoteControlModel remoteControlModel = new RemoteControlModel(IGNORE_DIRECTION_CHANGES, ROTATION_ANGLE);
+        RemoteControlModel remoteControlModel = new RemoteControlModel(IGNORE_DIRECTION_CHANGES, settingsService.getRotationAngel());
         remoteControlService.sendMessage(remoteControlModel);
     }
 
@@ -78,15 +81,22 @@ public class MainActivityPresenter extends BasePresenter<MainView> {
                 .doOnSubscribe(compositeDisposable::add)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doFinally(() -> runOnView(MainView::hideProgress))
-                .subscribe(isConnect -> runOnView(MainView::showConnected),
+                .subscribe(isConnect -> {
+                    settingsService.saveServerIpAddress(host);
+                    runOnView(MainView::showConnected);
+                    },
                         throwable -> runOnView(view -> view.error(throwable)));
     }
 
     void onDisconnectClicked() {
         remoteControlService.unPublish();
         runOnView(view -> {
-            view.showIpAddress(remoteControlService.getIpAddress());
+            view.showIpAddress(settingsService.getIpAddress());
             view.showConnectViews();
         });
+    }
+
+    void onSettingClicked() {
+        runOnView(view -> view.showSettingsDialog());
     }
 }

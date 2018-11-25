@@ -13,4 +13,5 @@ public interface MainView {
 
     void showConnectViews();
 
+    void showSettingsDialog();
 }

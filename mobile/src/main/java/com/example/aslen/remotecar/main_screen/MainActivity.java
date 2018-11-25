@@ -12,12 +12,14 @@ import android.widget.TextView;
 
 import com.example.aslen.remotecar.App;
 import com.example.aslen.remotecar.R;
+import com.example.aslen.remotecar.SettingsDialogFragment;
 import com.example.joy_stick.JoystickView;
 
 import javax.inject.Inject;
 
 public class MainActivity extends AppCompatActivity implements MainView, JoystickView.JoystickListener {
 
+    public static final String SETTINGS_TAG = "settings";
     @Inject
     protected MainActivityPresenter presenter;
 
@@ -40,6 +42,7 @@ public class MainActivity extends AppCompatActivity implements MainView, Joystic
 
     private void findViews() {
         serverIpAddress = findViewById(R.id.edt_server_ip);
+        findViewById(R.id.img_settings).setOnClickListener(v -> presenter.onSettingClicked());
         JoystickView joystickView = findViewById(R.id.joystick);
         joystickView.setJoystickListener(this);
         findViewById(R.id.btn_connect).setOnClickListener(view -> presenter.onConnect(serverIpAddress.getText().toString()));
@@ -108,7 +111,8 @@ public class MainActivity extends AppCompatActivity implements MainView, Joystic
 
     @Override
     public void showIpAddress(String ipAddress) {
-        messageTextView.setText(String.format("Your ip %s", serverIpAddress.getText()));
+        //messageTextView.setText(String.format("Your ip %s", serverIpAddress.getText()));
+        serverIpAddress.setText(ipAddress);
         playGroup.setVisibility(View.GONE);
         connectGroup.setVisibility(View.VISIBLE);
     }
@@ -144,5 +148,10 @@ public class MainActivity extends AppCompatActivity implements MainView, Joystic
     public void showConnectViews() {
         playGroup.setVisibility(View.GONE);
         connectGroup.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void showSettingsDialog() {
+        SettingsDialogFragment.newInstance().show(getSupportFragmentManager(), SETTINGS_TAG);
     }
 }
